@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Launcher: OpenDeck lance ce script avec les arguments du SDK Stream Deck.
+# On cherche un binaire node (PATH, puis installations mise/nvm) car OpenDeck
+# lancé depuis le bureau n'hérite pas forcément du PATH du shell.
+DIR="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
+
+NODE="$(command -v node 2>/dev/null)"
+if [ -z "$NODE" ]; then
+	NODE="$(ls -d "$HOME"/.local/share/mise/installs/node/*/bin/node "$HOME"/.nvm/versions/node/*/bin/node 2>/dev/null | sort -V | tail -1)"
+fi
+if [ -z "$NODE" ]; then
+	echo "claude-usage: node introuvable" >&2
+	exit 1
+fi
+
+exec "$NODE" "$DIR/plugin.js" "$@"

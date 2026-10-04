@@ -1,0 +1,26 @@
+{
+	"Name": "Claude Usage",
+	"Author": "verso",
+	"Version": "0.1.0",
+	"SDKVersion": 2,
+	"Description": "Affiche le pourcentage d'utilisation de ton abonnement Claude (session 5h / hebdo).",
+	"Icon": "icons/icon",
+	"Category": "Claude",
+	"CategoryIcon": "icons/icon",
+	"OS": [{ "Platform": "linux", "MinimumVersion": "0" }],
+	"Software": { "MinimumVersion": "6.0" },
+	"CodePathLin": "bin/claude-usage",
+	"Actions": [
+		{
+			"Name": "Utilisation Claude",
+			"UUID": "com.verso.claudeusage.usage",
+			"Icon": "icons/icon",
+			"Tooltip": "Pourcentage d'utilisation Claude. Appui = rafraîchir.",
+			"Controllers": ["Keypad"],
+			"SupportedInMultiActions": false,
+			"DisableAutomaticStates": true,
+			"PropertyInspectorPath": "propertyInspector/inspector.html",
+			"States": [{ "Image": "icons/icon", "ShowTitle": false }]
+		}
+	]
+}
