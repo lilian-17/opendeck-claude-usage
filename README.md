@@ -44,6 +44,28 @@ git clone https://github.com/lilian-17/opendeck-claude-usage.git
 ln -s "$PWD/opendeck-claude-usage/com.verso.claudeusage.sdPlugin" ~/.config/opendeck/plugins/
 ```
 
+## Claude Code status key
+
+A second action, **Claude Code Status**, colors the key according to what Claude Code is doing:
+
+| State | Default color | When |
+|---|---|---|
+| Working | blue | after you send a prompt, while tools run |
+| Needs you | red | permission prompt or a question from Claude |
+| Done | green | Claude finished its answer |
+| Idle | dark | no active session, or after you press the key |
+
+Press the key to acknowledge "done" (back to idle). Each color can be changed in the key settings. With several sessions open, the most urgent state wins (needs you > working > done).
+
+It relies on [Claude Code hooks](https://docs.claude.com/en/docs/claude-code/hooks). Install them once from the plugin folder:
+
+```sh
+node ~/.config/opendeck/plugins/com.verso.claudeusage.sdPlugin/hooks/install.js
+# remove them: add --uninstall
+```
+
+This adds entries to `~/.claude/settings.json` (a backup is saved as `settings.json.bak`; your other hooks are kept). The hook only writes the session state to `~/.local/state/opendeck-claude/sessions/`, nothing leaves your machine.
+
 ## How it works & privacy
 
 The plugin reads the OAuth token that Claude Code stores in `~/.claude/.credentials.json` (or `$CLAUDE_CONFIG_DIR/.credentials.json`) and calls `https://api.anthropic.com/api/oauth/usage`, the same endpoint Claude Code uses for `/usage`.

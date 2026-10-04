@@ -3,12 +3,19 @@
 	"Author": "verso",
 	"Version": "0.1.0",
 	"SDKVersion": 2,
-	"Description": "Affiche le pourcentage d'utilisation de ton abonnement Claude (session 5h / hebdo).",
+	"Description": "Affiche le pourcentage d'utilisation de ton abonnement Claude et l'état de Claude Code.",
 	"Icon": "icons/icon",
 	"Category": "Claude",
 	"CategoryIcon": "icons/icon",
-	"OS": [{ "Platform": "linux", "MinimumVersion": "0" }],
-	"Software": { "MinimumVersion": "6.0" },
+	"OS": [
+		{
+			"Platform": "linux",
+			"MinimumVersion": "0"
+		}
+	],
+	"Software": {
+		"MinimumVersion": "6.0"
+	},
 	"CodePathLin": "bin/claude-usage",
 	"Actions": [
 		{
@@ -16,11 +23,36 @@
 			"UUID": "com.verso.claudeusage.usage",
 			"Icon": "icons/icon",
 			"Tooltip": "Pourcentage d'utilisation Claude. Appui = rafraîchir.",
-			"Controllers": ["Keypad"],
+			"Controllers": [
+				"Keypad"
+			],
 			"SupportedInMultiActions": false,
 			"DisableAutomaticStates": true,
 			"PropertyInspectorPath": "propertyInspector/inspector.html",
-			"States": [{ "Image": "icons/icon", "ShowTitle": false }]
+			"States": [
+				{
+					"Image": "icons/icon",
+					"ShowTitle": false
+				}
+			]
+		},
+		{
+			"Name": "Statut Claude Code",
+			"UUID": "com.verso.claudeusage.status",
+			"Icon": "icons/status",
+			"Tooltip": "Couleur selon l'état de Claude Code : réfléchit, attend ta réponse, a fini. Appui = marquer comme vu.",
+			"Controllers": [
+				"Keypad"
+			],
+			"SupportedInMultiActions": false,
+			"DisableAutomaticStates": true,
+			"PropertyInspectorPath": "propertyInspector/status.html",
+			"States": [
+				{
+					"Image": "icons/status",
+					"ShowTitle": false
+				}
+			]
 		}
 	]
 }

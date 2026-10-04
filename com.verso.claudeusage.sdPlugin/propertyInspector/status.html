@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<style>
+		body { font-family: sans-serif; font-size: 13px; color: #ddd; background: transparent; margin: 8px; }
+		.row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+		input[type="color"] { width: 48px; height: 28px; padding: 0; border: 1px solid #555; border-radius: 4px; background: none; cursor: pointer; }
+		button { padding: 4px 10px; cursor: pointer; margin-top: 4px; }
+		p { color: #999; font-size: 12px; }
+		code { color: #ccc; }
+	</style>
+</head>
+<body>
+	<div class="row"><label for="workingColor">Réfléchit</label><input type="color" id="workingColor"></div>
+	<div class="row"><label for="waitingColor">A besoin de toi</label><input type="color" id="waitingColor"></div>
+	<div class="row"><label for="doneColor">A fini</label><input type="color" id="doneColor"></div>
+	<div class="row"><label for="idleColor">Inactif</label><input type="color" id="idleColor"></div>
+	<button id="reset">Couleurs par défaut</button>
+
+	<p>Appuie sur la touche pour marquer « fini » comme vu.</p>
+	<p>Nécessite les hooks Claude Code :<br><code>node hooks/install.js</code> dans le dossier du plugin.</p>
+
+	<script>
+		const DEFAULTS = { workingColor: '#3b82f6', waitingColor: '#ef4444', doneColor: '#22c55e', idleColor: '#1f1e1d' };
+		const fields = Object.keys(DEFAULTS).map((id) => document.getElementById(id));
+		let ws, uuid, settings;
+
+		function fill() {
+			for (const el of fields) el.value = settings[el.id] || DEFAULTS[el.id];
+		}
+
+		function save() {
+			ws.send(JSON.stringify({ event: 'setSettings', context: uuid, payload: settings }));
+		}
+
+		function connectElgatoStreamDeckSocket(port, inUUID, registerEvent, info, actionInfo) {
+			uuid = inUUID;
+			settings = JSON.parse(actionInfo).payload.settings || {};
+			fill();
+
+			ws = new WebSocket('ws://127.0.0.1:' + port);
+			ws.onopen = () => ws.send(JSON.stringify({ event: registerEvent, uuid }));
+		}
+
+		for (const el of fields) {
+			el.addEventListener('input', () => {
+				settings[el.id] = el.value;
+				save();
+			});
+		}
+
+		document.getElementById('reset').addEventListener('click', () => {
+			settings = { ...DEFAULTS };
+			fill();
+			save();
+		});
+	</script>
+</body>
+</html>

@@ -1,10 +1,14 @@
-// OpenDeck / Stream Deck plugin: shows Claude subscription usage.
+// OpenDeck / Stream Deck plugin: shows Claude subscription usage and Claude Code status.
 // No dependencies: uses Node >= 22 built-in WebSocket and fetch.
 'use strict';
 
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const { STATE_DIR } = require('./hooks/state-dir');
+
+const USAGE_ACTION = 'com.verso.claudeusage.usage';
+const STATUS_ACTION = 'com.verso.claudeusage.status';
 
 const USAGE_URL = 'https://api.anthropic.com/api/oauth/usage';
 const POLL_MS = 60_000;
@@ -21,7 +25,7 @@ const METRICS = {
 const args = {};
 for (let i = 2; i < process.argv.length; i += 2) args[process.argv[i].replace(/^-/, '')] = process.argv[i + 1];
 
-const contexts = new Map(); // context -> settings
+const contexts = new Map(); // context -> { action, settings }
 let usage = null;
 let error = null;
 let lastFetch = 0;
@@ -59,7 +63,7 @@ async function fetchUsage() {
 		console.error('fetchUsage:', e);
 	}
 	lastFetch = Date.now();
-	renderAll();
+	renderAll(USAGE_ACTION);
 }
 
 // --- SVG rendering (144x144)
@@ -150,8 +154,7 @@ function renderMessage(theme, title, msg) {
 	return svgImage(theme, `${text(72, 62, 14, theme.muted, title, 600)}${text(72, 88, 16, '#e5484d', msg, 700)}`);
 }
 
-function render(context) {
-	const settings = contexts.get(context) || {};
+function renderUsage(context, settings) {
 	const metric = settings.metric || 'five_hour';
 	const theme = themeFor(settings);
 	const showReset = resetView.has(context);
@@ -164,12 +167,85 @@ function render(context) {
 		const window = usage[m.field];
 		image = window ? renderRing(theme, window, showReset) : renderMessage(theme, m.label, 'N/A');
 	}
+	return image;
+}
+
+// --- Claude Code status (written by hooks/claude-status.js)
+
+const STATUS = {
+	waiting: { label: 'À TOI', setting: 'waitingColor', color: '#ef4444' },
+	working: { label: 'RÉFLÉCHIT', setting: 'workingColor', color: '#3b82f6' },
+	done: { label: 'FINI', setting: 'doneColor', color: '#22c55e' },
+	idle: { label: '', setting: 'idleColor', color: '#1f1e1d' },
+};
+// When several sessions run at once, the key shows the one that matters most.
+const PRIORITY = ['waiting', 'working', 'done'];
+// A "working" session without news for this long was probably interrupted (Stop doesn't fire on Esc).
+const WORKING_STALE_MS = 30 * 60_000;
+const SESSION_STALE_MS = 24 * 3600_000;
+
+function readSessions() {
+	let files = [];
+	try {
+		files = fs.readdirSync(STATE_DIR).filter((f) => f.endsWith('.json'));
+	} catch {
+		return [];
+	}
+	const now = Date.now();
+	const sessions = [];
+	for (const f of files) {
+		try {
+			const s = JSON.parse(fs.readFileSync(path.join(STATE_DIR, f), 'utf8'));
+			const age = now - s.updatedAt;
+			if (age > SESSION_STALE_MS || (s.state === 'working' && age > WORKING_STALE_MS)) continue;
+			sessions.push({ file: f, ...s });
+		} catch {
+			// Being rewritten or corrupted: skip it this time.
+		}
+	}
+	return sessions;
+}
+
+function currentStatus() {
+	const states = new Set(readSessions().map((s) => s.state));
+	return PRIORITY.find((p) => states.has(p)) || 'idle';
+}
+
+function renderStatus(settings) {
+	const status = STATUS[currentStatus()];
+	const bg = hexOr(settings[status.setting], status.color);
+	const fg = isLight(bg) ? '#1f1e1d' : '#f5f4ef';
+	return svgImage({ bg }, status.label ? text(72, 80, 22, fg, status.label, 700) : '');
+}
+
+// Pressing the status key acknowledges finished sessions: the key goes back to idle.
+function acknowledgeDone() {
+	for (const s of readSessions()) {
+		if (s.state === 'done') fs.rmSync(path.join(STATE_DIR, s.file), { force: true });
+	}
+}
+
+let watchDebounce;
+function watchStatus() {
+	fs.mkdirSync(STATE_DIR, { recursive: true });
+	fs.watch(STATE_DIR, () => {
+		clearTimeout(watchDebounce);
+		watchDebounce = setTimeout(() => renderAll(STATUS_ACTION), 100);
+	});
+}
+
+// --- Dispatch
+
+function render(context) {
+	const entry = contexts.get(context);
+	if (!entry) return;
+	const image = entry.action === STATUS_ACTION ? renderStatus(entry.settings) : renderUsage(context, entry.settings);
 	send({ event: 'setImage', context, payload: { image, target: 0 } });
 	send({ event: 'setTitle', context, payload: { title: '', target: 0 } });
 }
 
-function renderAll() {
-	for (const context of contexts.keys()) render(context);
+function renderAll(action) {
+	for (const [context, entry] of contexts) if (!action || entry.action === action) render(context);
 }
 
 // --- WebSocket connection to OpenDeck
@@ -190,7 +266,7 @@ ws.addEventListener('message', (ev) => {
 	switch (msg.event) {
 		case 'willAppear':
 		case 'didReceiveSettings':
-			contexts.set(msg.context, msg.payload?.settings || {});
+			contexts.set(msg.context, { action: msg.action, settings: msg.payload?.settings || {} });
 			render(msg.context);
 			break;
 		case 'willDisappear':
@@ -199,6 +275,11 @@ ws.addEventListener('message', (ev) => {
 			resetView.delete(msg.context);
 			break;
 		case 'keyDown': {
+			if (msg.action === STATUS_ACTION) {
+				acknowledgeDone();
+				renderAll(STATUS_ACTION);
+				break;
+			}
 			// Show the time until reset for a few seconds, then go back to the percentage.
 			const ctx = msg.context;
 			clearTimeout(resetView.get(ctx));
@@ -216,6 +297,8 @@ ws.addEventListener('message', (ev) => {
 
 ws.addEventListener('close', () => process.exit(0));
 
+watchStatus();
 setInterval(fetchUsage, POLL_MS);
-// Re-render between network calls so the reset countdown stays current.
+// Re-render between network calls so the reset countdown stays current
+// and stale "working" sessions expire.
 setInterval(renderAll, 15_000);

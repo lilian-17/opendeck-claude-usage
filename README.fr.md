@@ -44,6 +44,28 @@ git clone https://github.com/lilian-17/opendeck-claude-usage.git
 ln -s "$PWD/opendeck-claude-usage/com.verso.claudeusage.sdPlugin" ~/.config/opendeck/plugins/
 ```
 
+## Touche de statut Claude Code
+
+Une deuxième action, **Statut Claude Code**, colore la touche selon ce que fait Claude Code :
+
+| État | Couleur par défaut | Quand |
+|---|---|---|
+| Réfléchit | bleu | après l'envoi d'un prompt, pendant l'exécution des outils |
+| A besoin de toi | rouge | demande de permission ou question de Claude |
+| A fini | vert | Claude a terminé sa réponse |
+| Inactif | sombre | aucune session active, ou après un appui sur la touche |
+
+Un appui sur la touche marque « fini » comme vu (retour à inactif). Chaque couleur se change dans les réglages de la touche. Avec plusieurs sessions ouvertes, l'état le plus urgent l'emporte (à toi > réfléchit > fini).
+
+Ça repose sur les [hooks de Claude Code](https://docs.claude.com/en/docs/claude-code/hooks). Installe-les une fois depuis le dossier du plugin :
+
+```sh
+node ~/.config/opendeck/plugins/com.verso.claudeusage.sdPlugin/hooks/install.js
+# pour les retirer : ajouter --uninstall
+```
+
+Ça ajoute des entrées dans `~/.claude/settings.json` (une sauvegarde est faite dans `settings.json.bak`, tes autres hooks sont conservés). Le hook écrit seulement l'état de la session dans `~/.local/state/opendeck-claude/sessions/`, rien ne sort de ta machine.
+
 ## Fonctionnement et confidentialité
 
 Le plugin lit le jeton OAuth que Claude Code enregistre dans `~/.claude/.credentials.json` (ou `$CLAUDE_CONFIG_DIR/.credentials.json`) et appelle `https://api.anthropic.com/api/oauth/usage`, l'endpoint qu'utilise Claude Code pour `/usage`.
