@@ -6,6 +6,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { STATE_DIR } = require('./hooks/state-dir');
+const { Version: VERSION } = require('./manifest.json');
 
 const USAGE_ACTION = 'com.verso.claudeusage.usage';
 const STATUS_ACTION = 'com.verso.claudeusage.status';
@@ -50,7 +51,7 @@ async function fetchUsage() {
 			headers: {
 				Authorization: `Bearer ${token}`,
 				'anthropic-beta': 'oauth-2025-04-20',
-				'User-Agent': 'opendeck-claude-usage/0.1.0',
+				'User-Agent': `opendeck-claude-usage/${VERSION}`,
 			},
 			signal: AbortSignal.timeout(15_000),
 		});

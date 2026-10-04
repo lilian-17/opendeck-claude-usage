@@ -1,7 +1,7 @@
 {
 	"Name": "Claude Usage",
 	"Author": "verso",
-	"Version": "0.1.0",
+	"Version": "0.2.0",
 	"SDKVersion": 2,
 	"Description": "Affiche le pourcentage d'utilisation de ton abonnement Claude et l'état de Claude Code.",
 	"Icon": "icons/icon",
