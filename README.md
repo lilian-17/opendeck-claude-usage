@@ -16,6 +16,7 @@ Press the key to see the time left until the limit resets:
 
 - Ring showing the usage percentage, colored by level (orange → yellow at 70% → red at 90%)
 - Choose per key: 5-hour session, weekly, both, weekly Opus or weekly Sonnet
+- Customizable background and ring colors per key (text adapts to light backgrounds)
 - Press: shows the time left before the reset for 5 seconds and refreshes the data
 - Auto-refresh every minute
 - No dependencies: a single Node.js file

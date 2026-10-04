@@ -16,6 +16,7 @@ Un appui sur la touche affiche le temps restant avant la remise à zéro :
 
 - Anneau avec le pourcentage d'utilisation, coloré selon le niveau (orange, puis jaune à 70 %, puis rouge à 90 %)
 - Choix par touche : session 5 h, hebdomadaire, les deux, hebdo Opus ou hebdo Sonnet
+- Couleurs du fond et du cercle personnalisables par touche (le texte s'adapte aux fonds clairs)
 - Appui : affiche le temps avant le reset pendant 5 secondes et rafraîchit les données
 - Rafraîchissement automatique toutes les minutes
 - Aucune dépendance : un seul fichier Node.js
