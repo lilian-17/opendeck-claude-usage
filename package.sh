@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Construit dist/com.verso.claudeusage.sdPlugin.zip, prêt à attacher à une release GitHub.
+# Builds dist/com.verso.claudeusage.sdPlugin.zip, ready to attach to a GitHub release.
 set -euo pipefail
 cd "$(dirname "$0")"
 

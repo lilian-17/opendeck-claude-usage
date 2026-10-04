@@ -16,6 +16,7 @@ Un appui sur la touche affiche le temps restant avant la remise à zéro :
 
 - Anneau avec le pourcentage d'utilisation, coloré selon le niveau (orange, puis jaune à 70 %, puis rouge à 90 %)
 - Choix par touche : session 5 h, hebdomadaire, les deux, hebdo Opus ou hebdo Sonnet
+- Couleurs du fond et du cercle personnalisables par touche (le texte s'adapte aux fonds clairs)
 - Appui : affiche le temps avant le reset pendant 5 secondes et rafraîchit les données
 - Rafraîchissement automatique toutes les minutes
 - Aucune dépendance : un seul fichier Node.js
@@ -42,6 +43,28 @@ Un appui sur la touche affiche le temps restant avant la remise à zéro :
 git clone https://github.com/lilian-17/opendeck-claude-usage.git
 ln -s "$PWD/opendeck-claude-usage/com.verso.claudeusage.sdPlugin" ~/.config/opendeck/plugins/
 ```
+
+## Touche de statut Claude Code
+
+Une deuxième action, **Statut Claude Code**, colore la touche selon ce que fait Claude Code :
+
+| État | Couleur par défaut | Quand |
+|---|---|---|
+| Réfléchit | bleu | après l'envoi d'un prompt, pendant l'exécution des outils |
+| A besoin de toi | rouge | demande de permission ou question de Claude |
+| A fini | vert | Claude a terminé sa réponse |
+| Inactif | sombre | aucune session active, ou après un appui sur la touche |
+
+Un appui sur la touche marque « fini » comme vu (retour à inactif). Chaque couleur se change dans les réglages de la touche. Avec plusieurs sessions ouvertes, l'état le plus urgent l'emporte (à toi > réfléchit > fini).
+
+Ça repose sur les [hooks de Claude Code](https://docs.claude.com/en/docs/claude-code/hooks). Installe-les une fois depuis le dossier du plugin :
+
+```sh
+node ~/.config/opendeck/plugins/com.verso.claudeusage.sdPlugin/hooks/install.js
+# pour les retirer : ajouter --uninstall
+```
+
+Ça ajoute des entrées dans `~/.claude/settings.json` (une sauvegarde est faite dans `settings.json.bak`, tes autres hooks sont conservés). Le hook écrit seulement l'état de la session dans `~/.local/state/opendeck-claude/sessions/`, rien ne sort de ta machine.
 
 ## Fonctionnement et confidentialité
 

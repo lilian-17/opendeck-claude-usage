@@ -16,6 +16,7 @@ Press the key to see the time left until the limit resets:
 
 - Ring showing the usage percentage, colored by level (orange → yellow at 70% → red at 90%)
 - Choose per key: 5-hour session, weekly, both, weekly Opus or weekly Sonnet
+- Customizable background and ring colors per key (text adapts to light backgrounds)
 - Press: shows the time left before the reset for 5 seconds and refreshes the data
 - Auto-refresh every minute
 - No dependencies: a single Node.js file
@@ -42,6 +43,28 @@ Press the key to see the time left until the limit resets:
 git clone https://github.com/lilian-17/opendeck-claude-usage.git
 ln -s "$PWD/opendeck-claude-usage/com.verso.claudeusage.sdPlugin" ~/.config/opendeck/plugins/
 ```
+
+## Claude Code status key
+
+A second action, **Claude Code Status**, colors the key according to what Claude Code is doing:
+
+| State | Default color | When |
+|---|---|---|
+| Working | blue | after you send a prompt, while tools run |
+| Needs you | red | permission prompt or a question from Claude |
+| Done | green | Claude finished its answer |
+| Idle | dark | no active session, or after you press the key |
+
+Press the key to acknowledge "done" (back to idle). Each color can be changed in the key settings. With several sessions open, the most urgent state wins (needs you > working > done).
+
+It relies on [Claude Code hooks](https://docs.claude.com/en/docs/claude-code/hooks). Install them once from the plugin folder:
+
+```sh
+node ~/.config/opendeck/plugins/com.verso.claudeusage.sdPlugin/hooks/install.js
+# remove them: add --uninstall
+```
+
+This adds entries to `~/.claude/settings.json` (a backup is saved as `settings.json.bak`; your other hooks are kept). The hook only writes the session state to `~/.local/state/opendeck-claude/sessions/`, nothing leaves your machine.
 
 ## How it works & privacy
 
