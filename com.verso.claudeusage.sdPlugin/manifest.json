@@ -1,7 +1,7 @@
 {
 	"Name": "Claude Usage",
 	"Author": "verso",
-	"Version": "0.2.0",
+	"Version": "0.3.0",
 	"SDKVersion": 2,
 	"Description": "Shows your Claude subscription usage and Claude Code status.",
 	"Icon": "icons/icon",
