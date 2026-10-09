@@ -1,9 +1,9 @@
 {
 	"Name": "Claude Usage",
 	"Author": "verso",
-	"Version": "0.2.0",
+	"Version": "0.3.0",
 	"SDKVersion": 2,
-	"Description": "Affiche le pourcentage d'utilisation de ton abonnement Claude et l'état de Claude Code.",
+	"Description": "Shows your Claude subscription usage and Claude Code status.",
 	"Icon": "icons/icon",
 	"Category": "Claude",
 	"CategoryIcon": "icons/icon",
@@ -19,10 +19,10 @@
 	"CodePathLin": "bin/claude-usage",
 	"Actions": [
 		{
-			"Name": "Utilisation Claude",
+			"Name": "Claude Usage",
 			"UUID": "com.verso.claudeusage.usage",
 			"Icon": "icons/icon",
-			"Tooltip": "Pourcentage d'utilisation Claude. Appui = rafraîchir.",
+			"Tooltip": "Claude usage percentage. Press = refresh.",
 			"Controllers": [
 				"Keypad"
 			],
@@ -37,10 +37,10 @@
 			]
 		},
 		{
-			"Name": "Statut Claude Code",
+			"Name": "Claude Code Status",
 			"UUID": "com.verso.claudeusage.status",
 			"Icon": "icons/status",
-			"Tooltip": "Couleur selon l'état de Claude Code : réfléchit, attend ta réponse, a fini. Appui = marquer comme vu.",
+			"Tooltip": "Color by Claude Code state: thinking, waiting for you, done. Press = acknowledge.",
 			"Controllers": [
 				"Keypad"
 			],

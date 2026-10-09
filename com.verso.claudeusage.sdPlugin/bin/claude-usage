@@ -1,15 +1,40 @@
 #!/usr/bin/env bash
 # Launcher: OpenDeck runs this script with the Stream Deck SDK arguments.
-# Look for a node binary (PATH, then mise/nvm installs) because OpenDeck
+# Look for a node binary (PATH, then version managers) because OpenDeck
 # started from the desktop doesn't necessarily inherit the shell's PATH.
 DIR="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
 
+# The plugin needs Node >= 22 for the built-in WebSocket.
+recent_enough() {
+	[ -x "$1" ] && "$1" -e 'process.exit(+process.versions.node.split(".")[0] >= 22 ? 0 : 1)' 2>/dev/null
+}
+
 NODE="$(command -v node 2>/dev/null)"
-if [ -z "$NODE" ]; then
-	NODE="$(ls -d "$HOME"/.local/share/mise/installs/node/*/bin/node "$HOME"/.nvm/versions/node/*/bin/node 2>/dev/null | sort -V | tail -1)"
+if ! recent_enough "$NODE"; then
+	NODE=""
+	# Newest version first, sorted on the version number found in the path
+	# (not the whole path, which mixes version managers).
+	while IFS=' ' read -r _ candidate; do
+		if recent_enough "$candidate"; then
+			NODE="$candidate"
+			break
+		fi
+	done < <(
+		for n in \
+			"$HOME"/.local/share/mise/installs/node/*/bin/node \
+			"$HOME"/.nvm/versions/node/*/bin/node \
+			"$HOME"/.local/share/fnm/node-versions/*/installation/bin/node \
+			"$HOME"/.fnm/node-versions/*/installation/bin/node \
+			"$HOME"/.volta/tools/image/node/*/bin/node \
+			"$HOME"/.asdf/installs/nodejs/*/bin/node; do
+			[ -x "$n" ] || continue
+			[[ "${n#"$HOME"}" =~ ([0-9]+\.[0-9]+\.[0-9]+) ]] || continue
+			echo "${BASH_REMATCH[1]} $n"
+		done | sort -rV
+	)
 fi
 if [ -z "$NODE" ]; then
-	echo "claude-usage: node not found" >&2
+	echo "claude-usage: node >= 22 not found" >&2
 	exit 1
 fi
 
