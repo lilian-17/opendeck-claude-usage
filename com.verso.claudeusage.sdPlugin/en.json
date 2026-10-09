@@ -1,0 +1,12 @@
+{
+	"Description": "Shows your Claude subscription usage and Claude Code status.",
+	"Name": "Claude Usage",
+	"com.verso.claudeusage.usage": {
+		"Name": "Claude Usage",
+		"Tooltip": "Claude usage percentage. Press = refresh."
+	},
+	"com.verso.claudeusage.status": {
+		"Name": "Claude Code Status",
+		"Tooltip": "Color by Claude Code state: thinking, waiting for you, done. Press = acknowledge."
+	}
+}
