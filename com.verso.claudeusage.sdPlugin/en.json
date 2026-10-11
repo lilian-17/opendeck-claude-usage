@@ -1,6 +1,6 @@
 {
-	"Description": "Shows your Claude subscription usage and Claude Code status.",
-	"Name": "Claude Usage",
+	"Description": "See what Claude Code is doing (thinking, waiting for you, done) and how much of your Claude subscription you have used.",
+	"Name": "Claude Pulse",
 	"com.verso.claudeusage.usage": {
 		"Name": "Claude Usage",
 		"Tooltip": "Claude usage percentage. Press = refresh."

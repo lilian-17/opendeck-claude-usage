@@ -1,12 +1,14 @@
-# Claude Usage pour OpenDeck
+# Claude Pulse pour OpenDeck
 
 [English](README.md)
 
-Plugin [OpenDeck](https://github.com/nekename/OpenDeck) qui affiche le pourcentage d'utilisation de ton abonnement Claude (Pro / Max) sur une touche de Stream Deck, avec une deuxième touche qui montre ce que fait Claude Code.
+Plugin [OpenDeck](https://github.com/nekename/OpenDeck) qui amène Claude Code sur ton Stream Deck : une touche te dit d'un coup d'œil si Claude réfléchit, t'attend ou a fini, et une autre affiche le pourcentage d'utilisation de ton abonnement Claude (Pro / Max).
+
+Anciennement nommé *Claude Usage*.
 
 ![Vue utilisation](docs/preview.png)
 
-Un appui sur la touche affiche le temps restant avant la remise à zéro :
+Un appui sur la touche d'utilisation affiche le temps restant avant la remise à zéro :
 
 ![Vue reset](docs/preview-reset.png)
 
@@ -14,12 +16,12 @@ Un appui sur la touche affiche le temps restant avant la remise à zéro :
 
 ## Fonctionnalités
 
-- Anneau avec le pourcentage d'utilisation, coloré selon le niveau (orange, puis jaune à 70 %, puis rouge à 90 %)
+- **Touche de statut Claude Code** : réfléchit, a besoin de toi, a fini, pour savoir quand revenir sans surveiller le terminal (voir [plus bas](#touche-de-statut-claude-code))
+- **Touche d'utilisation** : anneau avec le pourcentage d'utilisation, coloré selon le niveau (orange, puis jaune à 70 %, puis rouge à 90 %)
 - Choix par touche : session 5 h, hebdomadaire, les deux, hebdo Opus ou hebdo Sonnet
-- Appui : affiche le temps avant le reset pendant 5 secondes et rafraîchit les données
-- Couleurs du fond et du cercle personnalisables par touche (le texte s'adapte aux fonds clairs)
-- Fond noir pur **OLED** en un clic : les pixels restent éteints autour de l'anneau
-- **Touche de statut Claude Code** : réfléchit, a besoin de toi, a fini (voir [plus bas](#touche-de-statut-claude-code))
+- Appui sur la touche d'utilisation : affiche le temps avant le reset pendant 5 secondes et rafraîchit les données
+- Couleurs personnalisables par touche, pour les deux touches (le texte s'adapte aux fonds clairs)
+- Fond noir pur **OLED** en un clic : les pixels restent éteints autour de l'anneau, ou sur toute la touche quand Claude Code est inactif
 - En français et en anglais, selon la langue choisie dans OpenDeck
 - Économe avec l'API : rafraîchissement toutes les 3 minutes, temporisation si l'API est saturée, dernières valeurs en cache pour un redémarrage instantané
 - Aucune dépendance : un seul fichier Node.js
@@ -33,7 +35,7 @@ Un appui sur la touche affiche le temps restant avant la remise à zéro :
 
 ## Installation
 
-**Depuis OpenDeck** : ouvre la liste des plugins, cherche **Claude Usage** et installe-le.
+**Depuis OpenDeck** : ouvre la liste des plugins, cherche **Claude Pulse** et installe-le.
 
 **À la main** : télécharge `com.verso.claudeusage.sdPlugin.zip` depuis la page [Releases](../../releases), puis installe-le depuis OpenDeck, ou décompresse-le dans le dossier des plugins :
 
@@ -41,21 +43,11 @@ Un appui sur la touche affiche le temps restant avant la remise à zéro :
 unzip com.verso.claudeusage.sdPlugin.zip -d ~/.config/opendeck/plugins/
 ```
 
-Redémarre OpenDeck, puis glisse l'action **Claude → Utilisation Claude** sur une touche. Clique sur la touche dans OpenDeck pour ouvrir ses réglages.
-
-## Réglages de la touche
-
-| Réglage | Choix |
-|---|---|
-| Limite affichée | session 5 h, hebdomadaire, les deux, hebdo Opus, hebdo Sonnet |
-| Fond / Cercle | n'importe quelle couleur ; **Noir OLED** met un fond noir pur |
-| Couleurs par défaut | retour à l'apparence d'origine |
-
-Un petit point orange dans le coin signale que les chiffres datent de plus de 15 minutes (problème réseau, API saturée ou jeton expiré).
+Redémarre OpenDeck, puis glisse les actions **Claude → Statut Claude Code** et **Claude → Utilisation Claude** sur des touches. Clique sur une touche dans OpenDeck pour ouvrir ses réglages.
 
 ## Touche de statut Claude Code
 
-Une deuxième action, **Statut Claude Code**, colore la touche selon ce que fait Claude Code :
+L'action **Statut Claude Code** colore la touche selon ce que fait Claude Code :
 
 | État | Couleur par défaut | Quand |
 |---|---|---|
@@ -79,6 +71,16 @@ Avant de désinstaller le plugin, retire les hooks, sinon Claude Code continue d
 ```sh
 node ~/.config/opendeck/plugins/com.verso.claudeusage.sdPlugin/hooks/install.js --uninstall
 ```
+
+## Réglages de la touche d'utilisation
+
+| Réglage | Choix |
+|---|---|
+| Limite affichée | session 5 h, hebdomadaire, les deux, hebdo Opus, hebdo Sonnet |
+| Fond / Cercle | n'importe quelle couleur ; **Noir OLED** met un fond noir pur |
+| Couleurs par défaut | retour à l'apparence d'origine |
+
+Un petit point orange dans le coin signale que les chiffres datent de plus de 15 minutes (problème réseau, API saturée ou jeton expiré).
 
 ## Dépannage
 

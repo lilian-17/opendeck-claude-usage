@@ -1,6 +1,6 @@
 {
-	"Description": "Affiche le pourcentage d'utilisation de ton abonnement Claude et l'état de Claude Code.",
-	"Name": "Claude Usage",
+	"Description": "Montre ce que fait Claude Code (réfléchit, attend ta réponse, a fini) et le pourcentage d'utilisation de ton abonnement Claude.",
+	"Name": "Claude Pulse",
 	"com.verso.claudeusage.usage": {
 		"Name": "Utilisation Claude",
 		"Tooltip": "Pourcentage d'utilisation Claude. Appui = rafraîchir."
