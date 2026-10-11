@@ -1,9 +1,9 @@
 {
-	"Name": "Claude Usage",
+	"Name": "Claude Pulse",
 	"Author": "verso",
 	"Version": "0.3.0",
 	"SDKVersion": 2,
-	"Description": "Shows your Claude subscription usage and Claude Code status.",
+	"Description": "See what Claude Code is doing (thinking, waiting for you, done) and how much of your Claude subscription you have used.",
 	"Icon": "icons/icon",
 	"Category": "Claude",
 	"CategoryIcon": "icons/icon",

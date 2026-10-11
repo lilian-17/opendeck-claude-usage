@@ -1,12 +1,14 @@
-# Claude Usage for OpenDeck
+# Claude Pulse for OpenDeck
 
 [Français](README.fr.md)
 
-An [OpenDeck](https://github.com/nekename/OpenDeck) plugin that shows your Claude subscription usage (Pro / Max) on a Stream Deck key, plus a second key that shows what Claude Code is doing.
+An [OpenDeck](https://github.com/nekename/OpenDeck) plugin that puts Claude Code on your Stream Deck: one key tells you at a glance whether Claude is thinking, waiting for you or done, and another shows how much of your Claude subscription (Pro / Max) you have used.
+
+Formerly named *Claude Usage*.
 
 ![Usage view](docs/preview.png)
 
-Press the key to see the time left until the limit resets:
+Press the usage key to see the time left until the limit resets:
 
 ![Reset view](docs/preview-reset.png)
 
@@ -14,12 +16,12 @@ Press the key to see the time left until the limit resets:
 
 ## Features
 
-- Ring showing the usage percentage, colored by level (orange → yellow at 70% → red at 90%)
+- **Claude Code status key**: thinking, needs you, done, so you know when to come back without watching the terminal (see [below](#claude-code-status-key))
+- **Usage key**: ring showing the usage percentage, colored by level (orange → yellow at 70% → red at 90%)
 - Choose per key: 5-hour session, weekly, both, weekly Opus or weekly Sonnet
-- Press: shows the time left before the reset for 5 seconds and refreshes the data
-- Customizable background and ring colors per key (text adapts to light backgrounds)
-- One-click pure black **OLED** background: the pixels stay off around the ring
-- **Claude Code status key**: thinking, needs you, done (see [below](#claude-code-status-key))
+- Press the usage key: shows the time left before the reset for 5 seconds and refreshes the data
+- Customizable colors per key, for both keys (text adapts to light backgrounds)
+- One-click pure black **OLED** background: the pixels stay off around the ring, or on the whole key when Claude Code is idle
 - English and French, following the OpenDeck language setting
 - Gentle on the API: refresh every 3 minutes, backoff when rate limited, last values cached so restarts are instant
 - No dependencies: a single Node.js file
@@ -33,7 +35,7 @@ Press the key to see the time left until the limit resets:
 
 ## Installation
 
-**From OpenDeck**: open the plugin list, search for **Claude Usage** and install it.
+**From OpenDeck**: open the plugin list, search for **Claude Pulse** and install it.
 
 **Manually**: download `com.verso.claudeusage.sdPlugin.zip` from the [Releases](../../releases) page, then either install it from OpenDeck, or extract it into the plugins folder:
 
@@ -41,21 +43,11 @@ Press the key to see the time left until the limit resets:
 unzip com.verso.claudeusage.sdPlugin.zip -d ~/.config/opendeck/plugins/
 ```
 
-Restart OpenDeck, then drag the **Claude → Claude Usage** action onto a key. Click the key in OpenDeck to open its settings.
-
-## Key settings
-
-| Setting | Options |
-|---|---|
-| Displayed limit | 5-hour session, weekly, both, weekly Opus, weekly Sonnet |
-| Background / Ring | any color; **OLED black** sets a pure black background |
-| Default colors | back to the original look |
-
-A small orange dot in the corner means the numbers are more than 15 minutes old (network issue, rate limit or expired token).
+Restart OpenDeck, then drag the **Claude → Claude Code Status** and **Claude → Claude Usage** actions onto keys. Click a key in OpenDeck to open its settings.
 
 ## Claude Code status key
 
-A second action, **Claude Code Status**, colors the key according to what Claude Code is doing:
+The **Claude Code Status** action colors the key according to what Claude Code is doing:
 
 | State | Default color | When |
 |---|---|---|
@@ -79,6 +71,16 @@ Before uninstalling the plugin, remove the hooks, otherwise Claude Code keeps ca
 ```sh
 node ~/.config/opendeck/plugins/com.verso.claudeusage.sdPlugin/hooks/install.js --uninstall
 ```
+
+## Usage key settings
+
+| Setting | Options |
+|---|---|
+| Displayed limit | 5-hour session, weekly, both, weekly Opus, weekly Sonnet |
+| Background / Ring | any color; **OLED black** sets a pure black background |
+| Default colors | back to the original look |
+
+A small orange dot in the corner means the numbers are more than 15 minutes old (network issue, rate limit or expired token).
 
 ## Troubleshooting
 
